@@ -9,7 +9,8 @@ Game::Game() :
 	mTicksCount(0),
 	mIsRunning(true),
 	mPaddle1Dir(0),
-	mPaddle2Dir(0)
+	mPaddle2Dir(0),
+	mDeadBalls(0)
 {}
 
 bool Game::Initialize() {
@@ -55,13 +56,32 @@ bool Game::Initialize() {
 	mPaddle2Pos.y = 768.0f / 2.0f;
 	
 	// Initialize ball positions and velocities
-	Ball ball;
-	ball.pos.x = 1024.0f / 2.0f;
-	ball.pos.y = 768.0f / 2.0f;
-	ball.vel.x = -200.0f;
-	ball.vel.y = 235.0f;
+	Ball ballA;
+	ballA.pos.x = 1024.0f / 2.0f;
+	ballA.pos.y = 768.0f / 2.0f;
+	ballA.vel.x = -200.0f;
+	ballA.vel.y = 235.0f;
+	ballA.active = true;
+	// Push ball into array
+	mBalls.push_back(ballA);
 
-	mBalls.push_back(ball);
+	Ball ballB;
+	ballB.pos.x = 1024.0f / 2.0f;
+	ballB.pos.y = 768.0f / 2.0f;
+	ballB.vel.x = 156.6f;
+	ballB.vel.y = -133.3f;
+	ballB.active = true;
+	// Push ball into array
+	mBalls.push_back(ballB);
+
+	Ball ballC;
+	ballC.pos.x = 1024.0f / 2.0f;
+	ballC.pos.y = 768.0f / 2.0f;
+	ballC.vel.x = 200.0f;
+	ballC.vel.y = -235.0f;
+	ballC.active = true;
+	// Push ball into array
+	mBalls.push_back(ballC);
 
 	// All done!
 	return true;
@@ -159,6 +179,11 @@ void Game::UpdateGame() {
 		ball.pos.x += ball.vel.x * deltaTime;
 		ball.pos.y += ball.vel.y * deltaTime;
 
+		// Continue if not iterating over active ball
+		if (!ball.active) {
+			continue;
+		}
+
 		// Check for collision with paddles
 		float diff1 = ball.pos.y - mPaddle1Pos.y;
 		float diff2 = ball.pos.y - mPaddle2Pos.y;
@@ -187,7 +212,14 @@ void Game::UpdateGame() {
 		}
 		// Check ball has gone off screen
 		else if (ball.pos.x <= 0.0f || ball.pos.x >= 1024.0f) {
-			mIsRunning = false;
+			// Set ball to inactive
+			ball.active = false;
+			// Increment number of inactive balls
+			mDeadBalls++;
+			// Exit if no more balls in play
+			if (mDeadBalls == mBalls.size()) {
+				mIsRunning = false;
+			}
 		}
 		// Check for collision with top wall
 		else if (ball.pos.y <= thickness && ball.vel.y < 0.0f) {

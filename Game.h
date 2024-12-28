@@ -14,6 +14,8 @@ struct Ball {
 	Vector2 pos;
 	// Ball velocity
 	Vector2 vel;
+	// Ball active or not
+	bool active;
 };
 
 class Game {
@@ -53,4 +55,6 @@ private:
 
 	// Vector to hold balls
 	std::vector<Ball> mBalls;
+	// Count of dead balls
+	int mDeadBalls;
 };
