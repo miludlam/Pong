@@ -1,10 +1,19 @@
 #pragma once
 #include "SDL.h"
+#include <vector>
 
 // Vector2 struct to store x/y coordinates
 struct Vector2 {
 	float x;
 	float y;
+};
+
+// Ball struct to store position and velocity
+struct Ball {
+	// Ball position
+	Vector2 pos;
+	// Ball velocity
+	Vector2 vel;
 };
 
 class Game {
@@ -42,8 +51,6 @@ private:
 	// Paddle position
 	Vector2 mPaddle2Pos;
 
-	// Ball position
-	Vector2 mBallPos;
-	// Ball velocity
-	Vector2 mBallVel;
+	// Vector to hold balls
+	std::vector<Ball> mBalls;
 };
